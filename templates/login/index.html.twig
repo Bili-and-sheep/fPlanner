@@ -1,23 +1,34 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello LoginController!
-{% endblock %}
+{% block title %}Login{% endblock %}
 
 {% block body %}
-	{% if error %}
-		<div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-	{% endif %}
+    {% if error %}
+        <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+    {% endif %}
 
-	<form action="{{ path('app_login') }}" method="post">
-		<label for="username">Email:</label>
-		<input type="text" id="username" name="_username" value="{{ last_username }}" required>
+        {# Formulaire de connexion initial si l'utilisateur n'a pas encore soumis ses identifiants #}
+        <form action="{{ path('app_login') }}" method="post">
+            <label for="username">Email:</label>
+            <input type="text" id="username" name="_username" value="{{ last_username }}" required>
 
-		<label for="password">Password:</label>
-		<input type="password" id="password" name="_password" required>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="_password" required>
 
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
-		<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+            <button type="submit">Login</button>
+        </form>
+		{% if app.request.hasPreviousSession and app.session.get('_security.2fa_remembered') is defined %}
+        {# Si l'utilisateur a déjà soumis ses identifiants, on affiche le formulaire 2FA #}
+        <form action="{{ path('2fa_verify') }}" method="post">
+            <label for="2fa_code">Entrez votre code 2FA :</label>
+            <input type="text" name="auth_code" id="2fa_code" required>
 
-		<button type="submit">login</button>
-	</form>
+            <button type="submit">Vérifier</button>
+        </form>
+    {% else %}
+    {% endif %}
+
+	
 {% endblock %}
