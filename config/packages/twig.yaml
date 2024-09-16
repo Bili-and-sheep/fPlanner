@@ -1,6 +1,10 @@
 twig:
     file_name_pattern: '*.twig'
 
+    # debug: '%kernel.debug%'
+    # strict_variables: '%kernel.debug%'
+
+
 when@test:
     twig:
         strict_variables: true

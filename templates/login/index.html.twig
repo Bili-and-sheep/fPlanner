@@ -21,7 +21,7 @@
         </form>
 		{% if app.request.hasPreviousSession and app.session.get('_security.2fa_remembered') is defined %}
         {# Si l'utilisateur a déjà soumis ses identifiants, on affiche le formulaire 2FA #}
-        <form action="{{ path('2fa_verify') }}" method="post">
+        <form action="{{ path('2fa_check') }}" method="post">
             <label for="2fa_code">Entrez votre code 2FA :</label>
             <input type="text" name="auth_code" id="2fa_code" required>
 

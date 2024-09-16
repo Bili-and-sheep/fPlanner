@@ -14,3 +14,8 @@ when@test:
         test: true
         session:
             storage_factory_id: session.storage.factory.mock_file
+
+# # config/packages/framework.yaml
+# parameters:
+#     env(DATABASE_URL): 'mysql://symfony:H*q/8s8#h[3u^WDFe73n7D2~S@82.67.86.223:3306/fplanner'
+#     encoded_database_url: '%env(urlencode:DATABASE_URL)%'

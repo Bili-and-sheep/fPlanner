@@ -1,18 +1,23 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Log in!
+{% block title %}Hello Enable2faController!
 {% endblock %}
 
 {% block body %}
-    <h1>Activer l'authentification à deux facteursb </h1>
+
+
+	{# templates/two_factor/enable.html.twig #}
+
+	<h1>Activer l'authentification à deux facteurs bite</h1>
 
 	<p>Scannez ce QR code avec Google Authenticator :</p>
-	<img src="{{qrCodeUrl}}" alt="QR Code">
+	<img src="{{app_2fa_qrcode}}" alt="QR Code">
 
-	<form method="POST" action="{{ path('app_2fa_qrcode') }}">
+	<form method="POST" action="{{ path('2fa_login') }}">
 		<label for="auth_code">Entrez le code :</label>
 		<input type="text" name="auth_code" id="auth_code" required>
 		<button type="submit">Vérifier</button>
 	</form>
+
 
 {% endblock %}

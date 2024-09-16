@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -35,6 +37,31 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
      */
     #[ORM\Column]
     private ?string $password = null;
+
+    #[ORM\Column(type: 'string', nullable: true)]
+
+    private ?string $googleAuthenticatorSecret = null;
+
+    /**
+     * @var Collection<int, Team>
+     */
+    #[ORM\ManyToMany(targetEntity: Team::class, mappedBy: 'members')]
+    private Collection $teams;
+
+    #[ORM\ManyToOne(inversedBy: 'user')]
+    private ?Forum $forum = null;
+
+
+
+
+    
+    public function __construct()
+    {
+        $this->teams = new ArrayCollection();
+    }
+
+
+
 
 
 
@@ -114,11 +141,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
     }
 
 
-    
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private ?string $googleAuthenticatorSecret = null;
+
+  
 
 
 
@@ -133,16 +157,55 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
 
     public function getGoogleAuthenticatorUsername(): string
     {
-        return $this->username;
+        return $this->email;
     }
 
     public function getGoogleAuthenticatorSecret(): ?string
     {
         return $this->googleAuthenticatorSecret;
     }
-
+    
     public function setGoogleAuthenticatorSecret(?string $googleAuthenticatorSecret): void
     {
         $this->googleAuthenticatorSecret = $googleAuthenticatorSecret;
+    }
+
+    /**
+     * @return Collection<int, Team>
+     */
+    public function getTeams(): Collection
+    {
+        return $this->teams;
+    }
+
+    public function addTeam(Team $team): static
+    {
+        if (!$this->teams->contains($team)) {
+            $this->teams->add($team);
+            $team->addMember($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTeam(Team $team): static
+    {
+        if ($this->teams->removeElement($team)) {
+            $team->removeMember($this);
+        }
+
+        return $this;
+    }
+
+    public function getForum(): ?Forum
+    {
+        return $this->forum;
+    }
+
+    public function setForum(?Forum $forum): static
+    {
+        $this->forum = $forum;
+
+        return $this;
     }
 }
