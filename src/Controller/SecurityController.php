@@ -42,7 +42,7 @@ class SecurityController extends AbstractController
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
 
-    #[Route(path: '/2fa/setup', name: 'app_2fa_setup')]
+    #[Route(path: '/2fasetup', name: 'app_2fa_setup')]
     public function setup2FA(Request $request): Response
     {
         $user = $this->getUser();

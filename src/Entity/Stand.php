@@ -37,9 +37,16 @@ class Stand
     #[ORM\OneToMany(targetEntity: Forum::class, mappedBy: 'stands')]
     private Collection $forums;
 
+    /**
+     * @var Collection<int, Evaluation>
+     */
+    #[ORM\OneToMany(targetEntity: Evaluation::class, mappedBy: 'stand', orphanRemoval: true)]
+    private Collection $evaluations;
+
     public function __construct()
     {
         $this->forums = new ArrayCollection();
+        $this->evaluations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -142,5 +149,50 @@ class Stand
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, Evaluation>
+     */
+    public function getEvaluations(): Collection
+    {
+        return $this->evaluations;
+    }
+
+    public function addEvaluation(Evaluation $evaluation): static
+    {
+        if (!$this->evaluations->contains($evaluation)) {
+            $this->evaluations->add($evaluation);
+            $evaluation->setStand($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEvaluation(Evaluation $evaluation): static
+    {
+        if ($this->evaluations->removeElement($evaluation)) {
+            // set the owning side to null (unless already changed)
+            if ($evaluation->getStand() === $this) {
+                $evaluation->setStand(null);
+            }
+        }
+
+        return $this;
+    }
+    public function getAverageRating(): ?float
+    {
+        $total = 0;
+        $count = count($this->evaluations);
+
+        if ($count === 0) {
+            return null;
+        }
+
+        foreach ($this->evaluations as $evaluation) {
+            $total += $evaluation->getRating();
+        }
+
+        return $total / $count;
     }
 }

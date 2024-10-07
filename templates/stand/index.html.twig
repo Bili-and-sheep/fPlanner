@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Stand index{% endblock %}
+
+{% block body %}
+    <h1>Stand index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+{#                <th>Id</th>#}
+                <th>Title</th>
+                <th>Description</th>
+                <th>Capacity</th>
+                <th>Duration</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for stand in stands %}
+            <tr>
+{#                <td>{{ stand.id }}</td>#}
+                <td>{{ stand.title }}</td>
+                <td>{{ stand.description }}</td>
+                <td>{{ stand.capacity }}</td>
+                <td>{{ stand.duration ? stand.duration|date('H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_stand_show', {'id': stand.id}) }}">show</a>
+                    <a href="{{ path('app_stand_edit', {'id': stand.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_stand_new') }}">Create new</a>
+{% endblock %}
