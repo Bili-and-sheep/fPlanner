@@ -10,7 +10,6 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface;
-use Scheb\TwoFactorBundle\Model\Google\TwoFactorTrait;
 
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -35,6 +34,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
     /**
      * @var string The hashed password
      */
+
     #[ORM\Column]
     private ?string $password = null;
 
@@ -164,7 +164,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
     {
         return $this->googleAuthenticatorSecret;
     }
-    
+
     public function setGoogleAuthenticatorSecret(?string $googleAuthenticatorSecret): void
     {
         $this->googleAuthenticatorSecret = $googleAuthenticatorSecret;
@@ -173,6 +173,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
     /**
      * @return Collection<int, Team>
      */
+
+
     public function getTeams(): Collection
     {
         return $this->teams;

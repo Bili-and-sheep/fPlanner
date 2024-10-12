@@ -3,7 +3,7 @@
 {% block title %}Stand{% endblock %}
 
 {% block body %}
-    <h1>Stand</h1>
+    <h1>Stand {{ stand.title }}</h1>
 
     <table class="table">
         <tbody>
@@ -27,8 +27,31 @@
                 <th>Duration</th>
                 <td>{{ stand.duration ? stand.duration|date('H:i:s') : '' }}</td>
             </tr>
+            <tr>
+                <th>Note</th>
+                <td>Average Rating: {{ averageRating ? averageRating : 'No ratings yet' }}</td>
+            </tr>
+
         </tbody>
+
     </table>
+    <div>
+
+        <h2>Rate Me</h2>
+        {{ form_start(form) }}
+            {{ form_row(form.rating) }}
+            {{ form_row(form.comment) }}
+        <button class="btn btn-primary">Submit</button>
+        {{ form_end(form) }}
+
+        <h2>Latest Comment</h2>
+        {% if latestEvaluation %}
+            <p>Rating: {{ latestEvaluation.rating }}</p>
+            <p>Comment: {{ latestEvaluation.comment }}</p>
+        {% else %}
+            <p>No comments yet.</p>
+        {% endif %}
+    </div>
 
     <a href="{{ path('app_stand_index') }}">back to list</a>
 

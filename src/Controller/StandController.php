@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\Evaluation;
+use App\Form\EvaluationType;
 use App\Entity\Stand;
 use App\Form\StandType;
 use App\Repository\StandRepository;
@@ -42,13 +44,33 @@ final class StandController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_stand_show', methods: ['GET'])]
-    public function show(Stand $stand): Response
+    #[Route('/{id}', name: 'app_stand_show', methods: ['POST', 'GET'])]
+    public function show($id, StandRepository $standRepository, Request $request, EntityManagerInterface $entityManager): Response
     {
+        $stand = $standRepository->find($id);
+
+        $evaluation = new Evaluation();
+        $form = $this->createForm(EvaluationType::class, $evaluation);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $evaluation->setStand($stand);
+            $entityManager->persist($evaluation);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_stand_show', ['id' => $stand->getId()]);
+        }
+
+        $latestEvaluation = $stand->getEvaluations()->last();
+
         return $this->render('stand/show.html.twig', [
             'stand' => $stand,
+            'form' => $form->createView(),
+            'averageRating' => $stand->getAverageRating(),
+            'latestEvaluation' => $latestEvaluation,
         ]);
     }
+
 
     #[Route('/{id}/edit', name: 'app_stand_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Stand $stand, EntityManagerInterface $entityManager): Response

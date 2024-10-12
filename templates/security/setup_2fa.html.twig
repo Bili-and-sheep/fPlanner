@@ -4,11 +4,11 @@
 {% endblock %}
 
 {% block body %}
-	<h1>Activer l'authentification à deux facteursb
+	<h1>Activer l'authentification à deux facteurs
 	</h1>
 
 	<p>Scannez ce QR code avec Google Authenticator :</p>
-	<img src="{{qrCodeUrl}}" alt="QR Code">
+	<img src="{{ qr_code_data_uri(qrCodeUrl) }}" alt="QR Code" />
 
 	<form method="POST" action="{{ path('app_2fa_qrcode') }}">
 		<label for="auth_code">Entrez le code :</label>
